@@ -34,3 +34,8 @@ class TuupPlacesApi:
         status = self.response.status_code
         content = json.loads(self.response.text)
         return status, content
+
+    def executeRequestWithParams(self, **kwargs):
+        self.addParams(**kwargs)
+        self.generateUrl()
+        self.getRequest()
