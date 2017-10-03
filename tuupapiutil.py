@@ -22,6 +22,15 @@ class TuupPlacesApi:
         return
 
     def generateUrl(self):
-        self.url = "https://{}/{}/?{}" .format(self.host, self.api, urllib.urlencode(self.params))
+        self.url = "https://{}/{}?{}" .format(self.host, self.api, urllib.urlencode(self.params))
         print("The generated Url is : %s" %self.url)
         return
+
+    def getRequest(self):
+        self.response = requests.get(self.url)
+        return
+
+    def parseJson(self):
+        status = self.response.status_code
+        content = json.loads(self.response.text)
+        return status, content
