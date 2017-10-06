@@ -76,11 +76,14 @@ class ApiNearbyTest(unittest.TestCase):
             locationList.append(p['location'])
 
         #calculate the arial distance between two points
+        distanceList = []
         for i, loc in enumerate(locationList):
             lat2 = float(locationList[i]['lat'])
             long2 = float(locationList[i]['lon'])
             distance = self.client.calcDistanceUsinghaversine(lat1, long1, lat2, long2)
-            self.assertLessEqual(distance, 5, "diatance is greater than the radius")
+            distanceList.append(distance)
+        print("The maximum distance of the locations: %f " %max(distanceList))
+        self.assertLessEqual(max(distanceList), 5, "diatance is greater than the radius")
 
     def test08_validLatLong_zeroRadius(self):
         self.client.executeRequestWithParams(at="61.44, 23.8", radius=0)
