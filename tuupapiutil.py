@@ -21,8 +21,13 @@ class TuupPlacesApi:
             self.params[k] = v
         return
 
-    def generateUrl(self):
+    def generateUrlWithParam(self):
         self.url = "https://{}/{}?{}" .format(self.host, self.api, urllib.urlencode(self.params))
+        print("The generated Url is : %s" %self.url)
+        return
+
+    def generateUrlWithArg(self, arg):
+        self.url = "https://{}/{}/{}" .format(self.host, self.api, arg)
         print("The generated Url is : %s" %self.url)
         return
 
@@ -37,5 +42,5 @@ class TuupPlacesApi:
 
     def executeRequestWithParams(self, **kwargs):
         self.addParams(**kwargs)
-        self.generateUrl()
+        self.generateUrlWithParam()
         self.getRequest()
