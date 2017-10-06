@@ -55,10 +55,32 @@ class ApiNearbyTest(unittest.TestCase):
         self.assertEqual(len(data['places']), 0, "places found at the location")
 
     def test07_validLatLong_validRadius(self):
-        self.client.executeRequestWithParams(at="61.44, 23.8", radius=5000)
+        """
+        In order to check that the list of places fall within the 
+        given radius, some third party api should be used to calculate 
+        the actual distance between two co-ordinates. This test is calculating the
+        arial distance, hence the results are not within the radius limit.
+        hence the test fails right now.
+        """
+        lat1 = 61.44
+        long1 = 23.8
+        loc = str(lat1) + ","+ str(long1)
+        self.client.executeRequestWithParams(at=loc, radius=5000)
         status, data = self.client.parseJson()
         self.assertEqual(status, 200, "Request Failed")
-        self.assertGreater(len(data['places']), 0, "places found at the location")
+        self.assertGreater(len(data['places']), 0, "places not found at the location")
+
+        #Get the list of location of all the places
+        locationList = []
+        for p in data['places']:
+            locationList.append(p['location'])
+
+        #calculate the arial distance between two points
+        for i, loc in enumerate(locationList):
+            lat2 = float(locationList[i]['lat'])
+            long2 = float(locationList[i]['lon'])
+            distance = self.client.calcDistanceUsinghaversine(lat1, long1, lat2, long2)
+            self.assertLessEqual(distance, 5, "diatance is greater than the radius")
 
     def test08_validLatLong_zeroRadius(self):
         self.client.executeRequestWithParams(at="61.44, 23.8", radius=0)
